@@ -2,106 +2,98 @@
   <div
     :class="[
       'scroll-wrapper',
-      { transition: !isTouching, touchignore: isIgnoreTouch },
+      { transition: !isTouching, touchignore: isTouchignore },
     ]"
     :style="{ '--translateY': translateYStyle }"
   >
     <div class="scroll-view">
       <div ref="scrollViewTop" class="scroll-view-top"></div>
-      <div>
-        <div>{{ msg }}</div>
-        <p>
-          For a guide and recipes on how to configure / customize this
-          project,<br />
-          check out the
-          <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-            >vue-cli documentation</a
-          >.
-        </p>
-        <h3>Installed CLI Plugins</h3>
-        <ul>
-          <li>
-            <a
-              href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-              target="_blank"
-              rel="noopener"
-              >babel</a
-            >
-          </li>
-        </ul>
-        <h3>Essential Links</h3>
-        <ul>
-          <li>
-            <a href="https://vuejs.org" target="_blank" rel="noopener"
-              >Core Docs</a
-            >
-          </li>
-          <li>
-            <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-              >Forum</a
-            >
-          </li>
-          <li>
-            <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-              >Community Chat</a
-            >
-          </li>
-          <li>
-            <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-              >Twitter</a
-            >
-          </li>
-          <li>
-            <a href="https://news.vuejs.org" target="_blank" rel="noopener"
-              >News</a
-            >
-          </li>
-        </ul>
-        <h3>Ecosystem</h3>
-        <ul v-for="i in 10" :key="i">
-          <li>
-            <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-              >vue-router</a
-            >
-          </li>
-          <li>
-            <a href="https://vuex.vuejs.org" target="_blank" rel="noopener"
-              >vuex</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/vuejs/vue-devtools#vue-devtools"
-              target="_blank"
-              rel="noopener"
-              >vue-devtools</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://vue-loader.vuejs.org"
-              target="_blank"
-              rel="noopener"
-              >vue-loader</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/vuejs/awesome-vue"
-              target="_blank"
-              rel="noopener"
-              >awesome-vue</a
-            >
-          </li>
-        </ul>
-      </div>
+      <div>{{ msg }}</div>
+      <p>
+        For a guide and recipes on how to configure / customize this project,<br />
+        check out the
+        <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
+          >vue-cli documentation</a
+        >.
+      </p>
+      <h3>Installed CLI Plugins</h3>
+      <ul>
+        <li>
+          <a
+            href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
+            target="_blank"
+            rel="noopener"
+            >babel</a
+          >
+        </li>
+      </ul>
+      <h3>Essential Links</h3>
+      <ul>
+        <li>
+          <a href="https://vuejs.org" target="_blank" rel="noopener"
+            >Core Docs</a
+          >
+        </li>
+        <li>
+          <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
+            >Forum</a
+          >
+        </li>
+        <li>
+          <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
+            >Community Chat</a
+          >
+        </li>
+        <li>
+          <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
+            >Twitter</a
+          >
+        </li>
+        <li>
+          <a href="https://news.vuejs.org" target="_blank" rel="noopener"
+            >News</a
+          >
+        </li>
+      </ul>
+      <h3>Ecosystem</h3>
+      <ul v-for="i in 10" :key="i">
+        <li>
+          <a href="https://router.vuejs.org" target="_blank" rel="noopener"
+            >vue-router</a
+          >
+        </li>
+        <li>
+          <a href="https://vuex.vuejs.org" target="_blank" rel="noopener"
+            >vuex</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://github.com/vuejs/vue-devtools#vue-devtools"
+            target="_blank"
+            rel="noopener"
+            >vue-devtools</a
+          >
+        </li>
+        <li>
+          <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
+            >vue-loader</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://github.com/vuejs/awesome-vue"
+            target="_blank"
+            rel="noopener"
+            >awesome-vue</a
+          >
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import throttle from "lodash.throttle";
-import debounce from "lodash.debounce";
 export default {
   name: "HelloWorld",
   props: {
@@ -109,11 +101,13 @@ export default {
   },
   data() {
     return {
+      /** @type {"hide" | "mid" | "full"} */
+      state: "full",
       originTranslateY: 0,
       translateY: "50%",
       height: 0,
       isTouching: false,
-      isIgnoreTouch: true,
+      isTouchignore: true,
       isScrollViewTop: true,
       deltaY: 0,
     };
@@ -124,16 +118,11 @@ export default {
         ? this.translateY + "px"
         : this.translateY;
     },
-    state() {
-      if (this.originTranslateY === this.height) return "hide";
-      if (this.originTranslateY === this.height / 2) return "mid";
-      return "full";
-    },
   },
   mounted() {
     this.addResizeListener();
     this.addScrollTopListener();
-    this.addPointerListener();
+    this.addTouchListener();
   },
   methods: {
     addResizeListener() {
@@ -161,8 +150,7 @@ export default {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            console.log("isIntersecting", entry.isIntersecting);
-
+            console.log("isScrollViewTop", entry.isIntersecting);
             this.isScrollViewTop = entry.isIntersecting;
           });
         },
@@ -170,70 +158,74 @@ export default {
       );
       observer.observe(this.$refs.scrollViewTop);
     },
-    addPointerListener() {
-      document.addEventListener("pointerdown", this.onPointerdown, {
-        capture: true,
+    addTouchListener() {
+      document.addEventListener("touchstart", this.onTouchstart, {
         passive: false,
+        capture: true,
       });
     },
-    /** @type {PointerEvent} event */
-    onPointerdown(event) {
-      console.log("pointerdown-----------------", event.clientY);
-      if (!this.isScrollViewTop) return;
-
+    /** @param {TouchEvent} event */
+    onTouchstart(event) {
+      console.log("touchstart", event);
+      if (event.touches.length > 1) return;
       this.isTouching = true;
-      const startY = event.clientY;
+      const startY = event.touches[0].clientY;
       this._lastY = startY;
-      const onPointermove = (/** @type {PointerEvent} */ event) => {
-        console.log("pointermove", event.clientY);
-        this.deltaY = event.clientY - this._lastY;
-        this._lastY = event.clientY;
-        let translateY = this.originTranslateY + (event.clientY - startY);
-        if (Math.abs(translateY) < 10) return;
-        if (translateY < 0) translateY = 0;
-        if (translateY > this.height) translateY = this.height;
-        this.translateY = translateY;
+      const onTouchmove = (/** @type {TouchEvent} */ event) => {
+        if (!this.isScrollViewTop) return;
+        const touch = event.touches[0];
+        this.deltaY = touch.clientY - this._lastY;
+        this._lastY = touch.clientY;
+        this.translateY = this.originTranslateY + (touch.clientY - startY);
+        if (this.translateY < 0) this.translateY = 0;
+        if (this.translateY > this.height) this.translateY = this.height;
       };
-      const onPointerComplete = () => {
-        console.log("pointerup", "deltaY", this.deltaY);
-        this.isTouching = false;
-        this.isIgnoreTouch = true;
-        // 下滑
-        if (this.deltaY > 0) {
-          if (this.translateY <= this.height / 2) {
-            this.translateY = this.height / 2;
-          }
-          if (this.translateY > this.height / 2) {
-            this.translateY = this.height;
-          }
-        }
-        // 上滑
-        if (this.deltaY < 0) {
-          if (this.translateY <= this.height / 2) {
-            this.translateY = 0;
-            this.isIgnoreTouch = false;
-          }
-          if (this.translateY > this.height / 2) {
-            this.translateY = this.height / 2;
-          }
-        }
-
-        this.originTranslateY = this.translateY;
-
-        document.removeEventListener("pointermove", onPointermove, {
-          capture: true,
-          passive: false,
-        });
-      };
-      document.addEventListener("pointermove", onPointermove, {
-        capture: true,
+      document.addEventListener("touchmove", onTouchmove, {
         passive: false,
       });
-      document.addEventListener("pointerup", onPointerComplete, { once: true });
+      document.addEventListener(
+        "touchend",
+        (/** @type {TouchEvent} */ event) => {
+          console.log("deltaY", this.deltaY);
+          this.isTouching = false;
+          this.isTouchignore = true;
+          // 下滑
+          if (this.deltaY > 0) {
+            if (this.translateY <= this.height / 2) {
+              this.translateY = this.height / 2;
+            }
+            if (this.translateY > this.height / 2) {
+              this.translateY = this.height;
+            }
+          }
+          // 上滑
+          if (this.deltaY < 0) {
+            if (this.translateY <= this.height / 2) {
+              this.translateY = 0;
+              this.isTouchignore = false;
+            }
+            if (this.translateY > this.height / 2) {
+              this.translateY = this.height / 2;
+            }
+          }
 
-      document.addEventListener("pointercancel", onPointerComplete, {
-        once: true,
-      });
+          this.originTranslateY = this.translateY;
+
+          document.removeEventListener("touchmove", onTouchmove, {
+            passive: false,
+          });
+        },
+        { once: true },
+      );
+      document.addEventListener(
+        "touchcancel",
+        (/** @type {TouchEvent} */ event) => {
+          console.log("touchcancel", event);
+          document.removeEventListener("touchmove", onTouchmove, {
+            passive: false,
+          });
+        },
+      );
     },
   },
 };
