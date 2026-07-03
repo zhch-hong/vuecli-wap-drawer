@@ -100,8 +100,6 @@
 </template>
 
 <script>
-import throttle from "lodash.throttle";
-import debounce from "lodash.debounce";
 export default {
   name: "HelloWorld",
   props: {
@@ -185,7 +183,6 @@ export default {
       const startY = event.clientY;
       this._lastY = startY;
       const onPointermove = (/** @type {PointerEvent} */ event) => {
-        console.log("pointermove", event.clientY);
         this.deltaY = event.clientY - this._lastY;
         this._lastY = event.clientY;
         let translateY = this.originTranslateY + (event.clientY - startY);
@@ -252,7 +249,7 @@ export default {
   transform: translateY(var(--translateY, 0));
   overflow-y: auto;
   &.transition {
-    transition: transform 300ms linear;
+    transition: transform 300ms;
   }
   &.touchignore {
     touch-action: none;
