@@ -3,14 +3,14 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     host: "0.0.0.0",
-    allowedHosts: ["www.local.webpackdev.com"],
+    allowedHosts: ["zch.wap.drawer"],
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
     client: {
       webSocketURL: {
         protocol: "wss",
-        hostname: "www.local.webpackdev.com",
+        hostname: "zch.wap.drawer",
         port: 443,
       },
     },
