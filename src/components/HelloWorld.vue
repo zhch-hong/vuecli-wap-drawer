@@ -173,6 +173,8 @@ export default {
       this._lastY = startY;
       const onTouchmove = (/** @type {TouchEvent} */ event) => {
         if (!this.isScrollViewTop) return;
+        if (this.isScrollViewTop && this._lastY < event.touches[0].clientY)
+          event.preventDefault();
         const touch = event.touches[0];
         this.deltaY = touch.clientY - this._lastY;
         this._lastY = touch.clientY;
@@ -244,7 +246,7 @@ export default {
   transform: translateY(var(--translateY, 0));
   overflow-y: auto;
   &.transition {
-    transition: transform 300ms linear;
+    transition: transform 300ms;
   }
   &.touchignore {
     touch-action: none;
