@@ -122,11 +122,6 @@ export default {
         ? this.translateY + "px"
         : this.translateY;
     },
-    state() {
-      if (this.originTranslateY === this.height) return "hide";
-      if (this.originTranslateY === this.height / 2) return "mid";
-      return "full";
-    },
   },
   mounted() {
     this.addResizeListener();
@@ -159,8 +154,6 @@ export default {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            console.log("isIntersecting", entry.isIntersecting);
-
             this.isScrollViewTop = entry.isIntersecting;
           });
         },
@@ -169,14 +162,10 @@ export default {
       observer.observe(this.$refs.scrollViewTop);
     },
     addPointerListener() {
-      document.addEventListener("pointerdown", this.onPointerdown, {
-        capture: true,
-        passive: false,
-      });
+      document.addEventListener("pointerdown", this.onPointerdown);
     },
     /** @type {PointerEvent} event */
     onPointerdown(event) {
-      console.log("pointerdown-----------------", event.clientY);
       if (!this.isScrollViewTop) return;
 
       this.isTouching = true;
@@ -186,15 +175,19 @@ export default {
         this.deltaY = event.clientY - this._lastY;
         this._lastY = event.clientY;
         let translateY = this.originTranslateY + (event.clientY - startY);
-        if (Math.abs(translateY) < 10) return;
         if (translateY < 0) translateY = 0;
         if (translateY > this.height) translateY = this.height;
         this.translateY = translateY;
       };
-      const onPointerComplete = () => {
-        console.log("pointerup", "deltaY", this.deltaY);
+      const onPointerComplete = (e) => {
+        console.log("onPointerComplete", e);
         this.isTouching = false;
         this.isIgnoreTouch = true;
+        // 从全屏快速且短距离下滑时，偶尔出现虽然向下移动了（translateY改变了）但无法判断方向（deltaY为0）的情况，这时仍然回到全屏
+        if (this.deltaY === 0) {
+          this.translateY = 0;
+          this.isIgnoreTouch = false;
+        }
         // 下滑
         if (this.deltaY > 0) {
           if (this.translateY <= this.height / 2) {
@@ -218,16 +211,13 @@ export default {
         this.originTranslateY = this.translateY;
 
         document.removeEventListener("pointermove", onPointermove, {
-          capture: true,
           passive: false,
         });
       };
       document.addEventListener("pointermove", onPointermove, {
-        capture: true,
         passive: false,
       });
       document.addEventListener("pointerup", onPointerComplete, { once: true });
-
       document.addEventListener("pointercancel", onPointerComplete, {
         once: true,
       });
@@ -248,6 +238,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
   transform: translateY(var(--translateY, 0));
   overflow-y: auto;
+  overscroll-behavior: none;
   &.transition {
     transition: transform 300ms;
   }

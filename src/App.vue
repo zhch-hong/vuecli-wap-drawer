@@ -52,6 +52,7 @@ export default {
 <style lang="scss">
 html {
   touch-action: none;
+  overscroll-behavior: none;
 }
 body {
   margin: 0;
